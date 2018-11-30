@@ -5,6 +5,58 @@
 
 sleep 25;
 
+# Disable a few Google Play Services for better overall battery life during idle and when the phone is supposed to deep sleep;
+# Remove Find My Device to enable GMS Doze
+pm disable com.google.android.gms/com.google.android.gms.analytics.service.AnalyticsService;
+pm disable com.google.android.gms/com.google.android.gms.analytics.AnalyticsService;
+pm disable com.google.android.gms/com.google.android.gms.analytics.AnalyticsTaskService;
+pm disable com.google.android.gms/com.google.android.gms.analytics.internal.PlayLogReportingService
+pm disable com.google.android.gms/com.google.android.gms.analytics.AnalyticsReceiver;
+pm disable com.google.android.gms/com.google.android.gms.mdm.services.RingService;
+pm disable com.google.android.gms/com.google.android.gms.mdm.services.NetworkQualityAndroidService;
+pm disable com.google.android.gms/com.google.android.gms.mdm.services.MdmPhoneWearableListenerService;
+pm disable com.google.android.gms/com.google.android.gms.mdm.services.LockscreenMessageService;
+pm enable  com.google.android.gms/com.google.android.gms.mdm.services.DeviceManagerApiService;
+pm disable com.google.android.gms/com.google.android.gms.mdm.services.GcmReceiverService;
+pm disable com.google.android.gms/com.google.android.gms.mdm.receivers.MdmDeviceAdminReceiver;
+pm disable com.google.android.gms/com.google.android.gms.mdm.receivers.RetryAfterAlarmReceiver;
+pm disable com.google.android.gms/com.google.android.gms.checkin.CheckinServiceImposeReceiver;
+pm disable com.google.android.gms/com.google.android.gms.checkin.CheckinServiceSecretCodeReceiver;
+pm disable com.google.android.gms/com.google.android.gms.checkin.CheckinServiceTriggerReceiver;
+pm disable com.google.android.gms/com.google.android.gms.checkin.EventLogService;
+pm disable com.google.android.gms/com.google.android.gms.checkin.CheckinService;
+pm disable com.google.android.gms/com.google.android.gms.checkin.CheckinApiService;
+pm disable com.google.android.gms/com.google.android.gms.clearcut.debug.ClearcutDebugDumpService;
+
+#change default gov to schedutil
+#cpu0
+echo "schedutil" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+#cpu1
+echo "schedutil" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+#cpu2
+echo "schedutil" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+#cpu3
+echo "schedutil" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+
+# Optimize and lower both the battery drain and overall power consumption that is caused by the Schedutil governor by biasing it to use slightly lower frequency steps, but do this without sacrificing performance or overall UI fluidity. See this as a balanced in-kernel power save mode, but without any notable traces of the "semi-typical" smoothness regressions;
+
+# Cpu 0;
+echo "18500" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us
+echo "775" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us
+
+# Cpu 1;
+echo "18500" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/down_rate_limit_us
+echo "775" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/up_rate_limit_us
+
+# Cpu 2;
+echo "18500" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us
+echo "775" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us
+
+# Cpu 3;
+echo "18500" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/down_rate_limit_us
+echo "775" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/up_rate_limit_us
+
+
 #Default I/o sched cfq
 echo "cfq" > /sys/block/sda/queue/scheduler
 echo "cfq" > /sys/block/sdb/queue/scheduler
@@ -16,7 +68,6 @@ echo "cfq" > /sys/block/sdf/queue/scheduler
 # Disable a couple of useless system daemons at boot;
 stop debuggerd
 stop healthd
-stop performanced
 stop statsd
 stop tombstoned
 stop incidentd
