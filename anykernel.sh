@@ -61,9 +61,8 @@ esac
 if [ "$(file_getprop /system/build.prop "ro.build.user")" != "android-build" -o "$host" == "custom" ]; then
   ui_print " "; ui_print "You are on a custom ROM, patching dtb to remove verity...";
   $bin/magiskboot --dtb-patch /tmp/anykernel/Image.lz4-dtb;
-  #Remove custom kernel init.rcs
-  rm -rf /system/system/etc/init/init.benzoio.rc
-  ui_print " "; ui_print "Removed custom rom init.rcs"
+  mount -o rw,remount -t auto /system >/dev/null
+  rm -rf /system/etc/init/benzorom-io.rc;
 else
   ui_print " "; ui_print "You are on stock, not patching dtb to remove verity!";
 fi;

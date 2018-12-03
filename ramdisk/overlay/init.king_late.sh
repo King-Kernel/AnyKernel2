@@ -1,12 +1,18 @@
 #!/system/bin/sh
 
 # (c) KingKernel kernel changes, some taken from xfirefly's flash kernel modification script since
-# my kernel relies a lot on it
+# my kernel relies a lot on it (couldn't have done this without you dude)
 
 sleep 25;
 
+# Mounting tweak for better overall partition performance (Need busybox magisk module);
+busybox mount -o remount,nosuid,nodev,noatime,nodiratime -t auto /;
+busybox mount -o remount,nosuid,nodev,noatime,nodiratime -t auto /proc;
+busybox mount -o remount,nosuid,nodev,noatime,nodiratime -t auto /sys;
+busybox mount -o remount,nosuid,nodev,noatime,nodiratime,barrier=0,noauto_da_alloc,discard -t auto /data;
+busybox mount -o remount,nodev,noatime,nodiratime,barrier=0,noauto_da_alloc,discard -t auto /system;
+
 # Disable a few Google Play Services for better overall battery life during idle and when the phone is supposed to deep sleep;
-# Remove Find My Device to enable GMS Doze
 pm disable com.google.android.gms/com.google.android.gms.analytics.service.AnalyticsService;
 pm disable com.google.android.gms/com.google.android.gms.analytics.AnalyticsService;
 pm disable com.google.android.gms/com.google.android.gms.analytics.AnalyticsTaskService;
@@ -78,12 +84,14 @@ for i in $(find /sys/ -name debug_mask); do
 echo "0" > $i;
 done
 
-# Enable & run v1.0 of my custom cpuset configuration at each possible boot with bleeding perfection - for the sake of improved power efficiency and overall performance;
+# A customized CPUSet profile for the first generation of Pixels (By xfirefly93) - with the goal of increasing both battery life, system responsivness and overall daily needed performance without any notable regressions, possible sacrifices and tradeoffs;
 echo "3" > /dev/cpuset/background/cpus
-echo "0-2" > /dev/cpuset/foreground/cpus
-echo "2-3" > /dev/cpuset/kernel/cpus
-echo "2" > /dev/cpuset/restricted/cpus
-echo "1-2" > /dev/cpuset/system-background/cpus
+echo "1,3" > /dev/cpuset/camera-daemon/cpus
+echo "0-1" > /dev/cpuset/foreground/cpus
+echo "2" > /dev/cpuset/kernel/cpus
+echo "2-3" > /dev/cpuset/restricted/cpus
+echo "2-3" > /dev/cpuset/system-background/cpus
+echo "0-3" > /dev/cpuset/top-app/cpus
 
 # FileSystem (FS) optimized tweaks & enhancements for a improved userspace experience;
 echo "0" > /proc/sys/fs/dir-notify-enable
@@ -293,21 +301,6 @@ echo "24000" > /sys/power/pm_freeze_timeout
 
 #Enable audio high performance mode by default
 echo "1" > /sys/module/snd_soc_wcd9330/parameters/high_perf_mode
-
-#Default I/o sched cfq
-chmod 0666 /sys/block/sda/queue/scheduler
-chmod 0666 /sys/block/sdb/queue/scheduler
-chmod 0666 /sys/block/sdc/queue/scheduler
-chmod 0666 /sys/block/sdd/queue/scheduler
-chmod 0666 /sys/block/sde/queue/scheduler
-chmod 0666 /sys/block/sdf/queue/scheduler
-
-echo "cfq" > /sys/block/sda/queue/scheduler
-echo "cfq" > /sys/block/sdb/queue/scheduler
-echo "cfq" > /sys/block/sdc/queue/scheduler
-echo "cfq" > /sys/block/sdd/queue/scheduler
-echo "cfq" > /sys/block/sde/queue/scheduler
-echo "cfq" > /sys/block/sdf/queue/scheduler
 
 # Script log file location
 LOG_FILE=/storage/emulated/0/logs
