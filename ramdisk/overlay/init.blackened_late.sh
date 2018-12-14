@@ -16,7 +16,6 @@ busybox mount -o remount,nodev,noatime,nodiratime,barrier=0,noauto_da_alloc,disc
 # Disable a couple of useless system daemons at boot;
 stop debuggerd
 stop healthd
-stop logcat
 stop statsd
 stop tombstoned
 stop incidentd
@@ -28,15 +27,12 @@ echo "0" > $i;
 done
 
 # Use & enable xFirefly93's own, fully customized and overall enhanced CPUSet configuration for gaining a massively improvement in performance as well as battery life without any real world notable tradeoffs or regressions;
-echo "6-7" > /dev/cpuset/background/cpus
+echo "5-6" > /dev/cpuset/background/cpus
 echo "0-3" > /dev/cpuset/foreground/cpus
-echo "4-5" > /dev/cpuset/kernel/cpus
-echo "4-7" > /dev/cpuset/restricted/cpus
-echo "4-7" > /dev/cpuset/system-background/cpus
+echo "6-7" > /dev/cpuset/kernel/cpus
+echo "4-5" > /dev/cpuset/restricted/cpus
+echo "4-5" > /dev/cpuset/system-background/cpus
 echo "0-7" > /dev/cpuset/top-app/cpus
-
-# Enable stune foreground boost and gain a well deserved responsivness boost with one extra snap on top of it;
-echo "8" > /dev/stune/foreground/schedtune.boost
 
 # FileSystem (FS) optimized tweaks & enhancements for a improved userspace experience;
 echo "0" > /proc/sys/fs/dir-notify-enable
@@ -59,18 +55,18 @@ echo "980000" > /proc/sys/kernel/sched_rt_runtime_us
 # Network tweaks for slightly reduced battery consumption when being "actively" connected to a network connection;
 echo "128" > /proc/sys/net/core/netdev_max_backlog
 echo "0" > /proc/sys/net/core/netdev_tstamp_prequeue
-echo "0" > /proc/sys/net/ipv4/cipso_cache_bucket_size #1
-echo "0" > /proc/sys/net/ipv4/cipso_cache_enable #2
-echo "0" > /proc/sys/net/ipv4/cipso_rbm_strictvalid #3
-echo "0" > /proc/sys/net/ipv4/igmp_link_local_mcast_reports #4
-echo "24" > /proc/sys/net/ipv4/ipfrag_time #5
+echo "0" > /proc/sys/net/ipv4/cipso_cache_bucket_size 
+echo "0" > /proc/sys/net/ipv4/cipso_cache_enable 
+echo "0" > /proc/sys/net/ipv4/cipso_rbm_strictvalid 
+echo "0" > /proc/sys/net/ipv4/igmp_link_local_mcast_reports 
+echo "24" > /proc/sys/net/ipv4/ipfrag_time 
 echo "westwood" > /proc/sys/net/ipv4/tcp_congestion_control
 echo "2" > /proc/sys/net/ipv4/tcp_ecn
 echo "320" > /proc/sys/net/ipv4/tcp_keepalive_intvl
 echo "21600" > /proc/sys/net/ipv4/tcp_keepalive_time
-echo "1" > /proc/sys/net/ipv4/tcp_no_metrics_save #6
+echo "1" > /proc/sys/net/ipv4/tcp_no_metrics_save 
 echo "1500" > /proc/sys/net/ipv4/tcp_probe_interval
-echo "48" > /proc/sys/net/ipv6/ip6frag_time #7
+echo "48" > /proc/sys/net/ipv6/ip6frag_time 
 
 # Virtual Memory tweaks & enhancements for a massively improved balance between performance and battery life;
 echo "0" > /proc/sys/vm/compact_unevictable_allowed
@@ -88,7 +84,7 @@ echo "60" > /proc/sys/vm/vfs_cache_pressure
 # Disable gesture based vibration because it is honestly not even worth having enabled at all;
 echo "0" > /sys/android_touch/vib_strength
 
-# Block based tuning for reduced lag and less possible amount of general overhead;
+# Block based tuning for reduced lag and less possible amount of general overhead; 
 echo "0" > /sys/block/dm-0/queue/add_random
 echo "0" > /sys/block/dm-0/queue/iostats
 echo "1" > /sys/block/dm-0/queue/rq_affinity
@@ -219,27 +215,27 @@ echo "0" > /sys/block/ram15/queue/rotational
 echo "1" > /sys/block/ram15/queue/rq_affinity
 echo "0" > /sys/block/sda/queue/add_random
 echo "0" > /sys/block/sda/queue/iostats
-echo "fiops" > /sys/block/sda/queue/scheduler
+echo "cfq" > /sys/block/sda/queue/scheduler
 echo "0" > /sys/block/sdb/queue/add_random
 echo "0" > /sys/block/sdb/queue/iostats
 echo "128" > /sys/block/sdb/queue/read_ahead_kb
-echo "fiops" > /sys/block/sdb/queue/scheduler
+echo "cfq" > /sys/block/sdb/queue/scheduler
 echo "0" > /sys/block/sdc/queue/add_random
 echo "0" > /sys/block/sdc/queue/iostats
 echo "128" > /sys/block/sdc/queue/read_ahead_kb
-echo "fiops" > /sys/block/sdc/queue/scheduler
+echo "cfq" > /sys/block/sdc/queue/scheduler
 echo "0" > /sys/block/sdd/queue/add_random
 echo "0" > /sys/block/sdd/queue/iostats
 echo "128" > /sys/block/sdd/queue/read_ahead_kb
-echo "fiops" > /sys/block/sdd/queue/scheduler
+echo "cfq" > /sys/block/sdd/queue/scheduler
 echo "0" > /sys/block/sde/queue/add_random
 echo "0" > /sys/block/sde/queue/iostats
 echo "128" > /sys/block/sde/queue/read_ahead_kb
-echo "fiops" > /sys/block/sde/queue/scheduler
+echo "cfq" > /sys/block/sde/queue/scheduler
 echo "0" > /sys/block/sdf/queue/add_random
 echo "0" > /sys/block/sdf/queue/iostats
 echo "128" > /sys/block/sdf/queue/read_ahead_kb
-echo "fiops" > /sys/block/sdf/queue/scheduler
+echo "cfq" > /sys/block/sdf/queue/scheduler
 echo "0" > /sys/block/zram0/queue/add_random
 echo "0" > /sys/block/zram0/queue/iostats
 echo "128" > /sys/block/zram0/queue/read_ahead_kb
